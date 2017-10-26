@@ -1,0 +1,11 @@
+# json
+simplejson==3.8.1
+
+# Log with some color
+colorlog==2.7.0
+
+# skimage
+scikit-image==0.13.0
+
+# tensorflow
+tensorflow==1.3.0

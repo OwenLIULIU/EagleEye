@@ -1,0 +1,76 @@
+*.py[cod]
+*.orig
+
+# No local dbs
+*.db
+
+# C extensions
+*.so
+
+# OS X Junk
+.DS_Store
+
+# Packages
+*.egg
+*.egg-info
+
+bin
+build
+develop-eggs
+dist
+eggs
+parts
+sdist
+var
+
+.installed.cfg
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+.noseids
+nosetests.xml
+coverage.xml
+.jenkins/junit.xml
+.jenkins/coverage.xml
+
+# Translations
+*.mo
+
+# Ignore python virtual environments
+env
+
+# Ignore local logs
+logs
+
+# Ignore docs
+docs/_build/*
+docs/source
+
+# ignore ipython profile stuff
+.ipython
+.phutil_module_cache
+
+.idea
+.ropeproject
+.ctags
+tags
+console.log
+
+# image files
+scripts/data/*
+scripts/test/*
+data/*
+images/*
+
+# checkpoint
+checkpoint/*
+
+.swp
+celerybeat.pid
+celerybeat-schedule
