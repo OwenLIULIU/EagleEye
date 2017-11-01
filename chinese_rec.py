@@ -99,6 +99,28 @@ class DataIterator:
 
 
 def build_graph(top_k):
+
+    print '\ntest\n'
+    sparse_indices = [[0, 1], [2, 4], [4, 5], [6, 9]]
+    output_shape = tf.zeros([6, 10]).shape
+    sparse_output = tf.sparse_to_dense(sparse_indices, output_shape, 1, default_value=0)
+    print sparse_output.get_shape()
+    print sparse_output
+
+    print '-------------'
+
+    labels = [1, 3, 4, 8, 7, 5, 2, 9, 0, 8, 7]
+    one_hot_index = np.arange(len(labels)) * 10 + labels
+
+    print ('one_hot_index:{}'.format(one_hot_index))
+
+    one_hot = np.zeros((len(labels), 10))
+    one_hot.flat[one_hot_index] = 1
+
+    print('one_hot:{}'.format(one_hot))
+
+    print '\ntest\n'
+
     # with tf.device('/cpu:0'):
     keep_prob = tf.placeholder(dtype=tf.float32, shape=[], name='keep_prob')
     images = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 1], name='image_batch')
