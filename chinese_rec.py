@@ -100,30 +100,30 @@ class DataIterator:
 
 def build_graph(top_k):
 
-    print '\ntest\n'
-    sparse_indices = [[0, 1], [2, 4], [4, 5], [6, 9]]
-    output_shape = tf.zeros([6, 10]).shape
-    sparse_output = tf.sparse_to_dense(sparse_indices, output_shape, 1, default_value=0)
-    print sparse_output.get_shape()
-    print sparse_output
-
-    print '-------------'
-
-    labels = [1, 3, 4, 8, 7, 5, 2, 9, 0, 8, 7]
-    one_hot_index = np.arange(len(labels)) * 10 + labels
-
-    print ('one_hot_index:{}'.format(one_hot_index))
-
-    one_hot = np.zeros((len(labels), 10))
-    one_hot.flat[one_hot_index] = 1
-
-    print('one_hot:{}'.format(one_hot))
-
-    print '\ntest\n'
+    # print '\ntest\n'
+    # sparse_indices = [[0, 1], [2, 4], [4, 5], [6, 9]]
+    # output_shape = tf.zeros([6, 10]).shape
+    # sparse_output = tf.sparse_to_dense(sparse_indices, output_shape, 1, default_value=0)
+    # print sparse_output.get_shape()
+    # print sparse_output
+    #
+    # print '-------------'
+    #
+    # labels = [1, 3, 4, 8, 7, 5, 2, 9, 0, 8, 7]
+    # one_hot_index = np.arange(len(labels)) * 10 + labels
+    #
+    # print ('one_hot_index:{}'.format(one_hot_index))
+    #
+    # one_hot = np.zeros((len(labels), 10))
+    # one_hot.flat[one_hot_index] = 1
+    #
+    # print('one_hot:{}'.format(one_hot))
+    #
+    # print '\ntest\n'
 
     # with tf.device('/cpu:0'):
     keep_prob = tf.placeholder(dtype=tf.float32, shape=[], name='keep_prob')
-    images = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 1], name='image_batch')
+    images = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 3], name='image_batch')
     labels = tf.placeholder(dtype=tf.int64, shape=[None, 2500], name='label_batch')
 
     print 'images'
@@ -156,8 +156,13 @@ def build_graph(top_k):
     print fc1.get_shape()
     # logits = slim.fully_connected(slim.dropout(fc1, keep_prob), FLAGS.charset_size, activation_fn=None, scope='fc2')
     logits = slim.fully_connected(slim.dropout(fc1, keep_prob), 2500, activation_fn=None, scope='fc2')
+    logits_h = [logits]
     print 'logits'
     print logits.get_shape()
+    print 'logits_h'
+    print logits_h.get_shape()
+    print 'labels'
+    print labels.get_shape()
     # logits = slim.fully_connected(flatten, FLAGS.charset_size, activation_fn=None, reuse=reuse, scope='fc')
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
     accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logits, 1), labels), tf.float32))
