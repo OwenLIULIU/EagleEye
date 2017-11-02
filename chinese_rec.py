@@ -52,8 +52,8 @@ class DataIterator:
             # if root < truncate_path:
             self.image_names += [os.path.join(root, file_path) for file_path in file_list if file_path != '.DS_Store']
         random.shuffle(self.image_names)
-        self.labels = np.array([self.generate_label(file_name[len(data_dir):].split(os.sep)[0]) for file_name in self.image_names])
-        # self.labels = np.array([np.array([2, 3, 4, 5]) for _ in self.image_names])
+        # self.labels = np.array([self.generate_label(file_name[len(data_dir):].split(os.sep)[0]) for file_name in self.image_names])
+        self.labels = np.array([1 for _ in self.image_names])
 
 
     @property
@@ -123,8 +123,8 @@ def build_graph(top_k):
 
     # with tf.device('/cpu:0'):
     keep_prob = tf.placeholder(dtype=tf.float32, shape=[], name='keep_prob')
-    images = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 3], name='image_batch')
-    labels = tf.placeholder(dtype=tf.int64, shape=[None, 2500], name='label_batch')
+    images = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 1], name='image_batch')
+    labels = tf.placeholder(dtype=tf.int64, shape=[None], name='label_batch')
 
     print 'images'
     print images.get_shape()
@@ -156,16 +156,24 @@ def build_graph(top_k):
     print fc1.get_shape()
     # logits = slim.fully_connected(slim.dropout(fc1, keep_prob), FLAGS.charset_size, activation_fn=None, scope='fc2')
     logits = slim.fully_connected(slim.dropout(fc1, keep_prob), 2500, activation_fn=None, scope='fc2')
-    logits_h = [logits]
+    t_logits = tf.transpose(logits)
+    logits_h = tf.concat([[t_logits] for _ in range(100)], 0)
+    l = tf.transpose(logits_h)
     print 'logits'
     print logits.get_shape()
+    print 'logits_t'
+    print t_logits.get_shape()
     print 'logits_h'
     print logits_h.get_shape()
+    print 'l'
+    print l.get_shape()
     print 'labels'
     print labels.get_shape()
     # logits = slim.fully_connected(flatten, FLAGS.charset_size, activation_fn=None, reuse=reuse, scope='fc')
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
     accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logits, 1), labels), tf.float32))
+
+    # loss =
 
     global_step = tf.get_variable("step", [], initializer=tf.constant_initializer(0.0), trainable=False)
     rate = tf.train.exponential_decay(2e-4, global_step, decay_steps=2000, decay_rate=0.97, staircase=True)
